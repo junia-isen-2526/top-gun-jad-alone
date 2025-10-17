@@ -6,6 +6,8 @@
 
 void putMobileSymbolsOnScreen(Mobile *mobile, char **screen, int height, int width);
 
+char **createEmptyScreen(const Sky *sky);
+void destroyScreen(const Sky *sky, char **screen);
 Sky *createSky(int height, int width) {
 	Sky *sky = malloc(sizeof(Sky));
 	sky->height = height;
@@ -27,6 +29,27 @@ void destroySky(Sky *sky) {
 }
 
 void displaySky(Sky *sky) {
+	char **screen = createEmptyScreen(sky);
+	for (int i = 0; i < MAX_MOBILES && sky->mobiles[i] != NULL; i++) {
+		putMobileSymbolsOnScreen(sky->mobiles[i], screen, sky->height, sky->width);
+	}
+	for (int row = 0; row < sky->height; row++) {
+		for (int column = 0; column < sky->width; column++) {
+			printf("%c", screen[row][column]);
+		}
+		printf("\n");
+	}
+	destroyScreen(sky, screen);
+}
+
+void destroyScreen(const Sky *sky, char **screen) {
+	for (int row = 0; row < sky->height; row++) {
+		free(screen[row]);
+	}
+	free(screen);
+}
+
+char **createEmptyScreen(const Sky *sky) {
 	char **screen = malloc(sky->height * sizeof(char *));
 	for (int row = 0; row < sky->height; row++) {
 		screen[row] = malloc(sky->width * sizeof(char));
@@ -36,20 +59,7 @@ void displaySky(Sky *sky) {
 			screen[row][column] = EMPTY_SKY_TILE;
 		}
 	}
-	for (int i = 0; i < MAX_MOBILES && sky->mobiles[i] != NULL; i++) {
-		putMobileSymbolsOnScreen(sky->mobiles[i], screen, sky->height, sky->width);
-	}
-	for (int row = 0; row < sky->height; row++) {
-
-		for (int column = 0; column < sky->width; column++) {
-			printf("%c", screen[row][column]);
-		}
-		printf("\n");
-	}
-	for (int row = 0; row < sky->height; row++) {
-		free(screen[row]);
-	}
-	free(screen);
+	return screen;
 }
 
 void putMobileSymbolsOnScreen(Mobile *mobile, char **screen, int height, int width) {
