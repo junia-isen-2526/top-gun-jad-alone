@@ -4,13 +4,11 @@ project(junia_isen3_topgun C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(junia_isen3_topgun main.c
-        Sky.c
         Sky.h
+        Sky.c
         Mobile.c
         Mobile.h
         Direction.c
         Direction.h
         Sprite.c
         Sprite.h)
-
-add_compile_options(-g)
