@@ -4,24 +4,62 @@
 
 #include "Sky.h"
 
+void putMobileSymbolsOnScreen(Mobile *mobile, char **screen, int height, int width);
+
 Sky *createSky(int height, int width) {
 	Sky *sky = malloc(sizeof(Sky));
 	sky->height = height;
 	sky->width = width;
+	for (int i = 0; i < MAX_MOBILES; i++) {
+		sky->mobiles[i] = NULL;
+	}
 	return sky;
 }
 
 void destroySky(Sky *sky) {
 	if (sky == NULL) return;
+	for (int i = 0; i < MAX_MOBILES; i++) {
+		if (sky->mobiles[i] != NULL) {
+			destroyMobile(sky->mobiles[i]);
+		}
+	}
 	free(sky);
 }
 
 void displaySky(Sky *sky) {
+	char **screen = malloc(sky->height * sizeof(char *));
+	for (int row = 0; row < sky->height; row++) {
+		screen[row] = malloc(sky->width * sizeof(char));
+	}
 	for (int row = 0; row < sky->height; row++) {
 		for (int column = 0; column < sky->width; column++) {
-			printf("%c", EMPTY_SKY_TILE);
+			screen[row][column] = EMPTY_SKY_TILE;
+		}
+	}
+	for (int i = 0; i < MAX_MOBILES && sky->mobiles[i] != NULL; i++) {
+		putMobileSymbolsOnScreen(sky->mobiles[i], screen, sky->height, sky->width);
+	}
+	for (int row = 0; row < sky->height; row++) {
+
+		for (int column = 0; column < sky->width; column++) {
+			printf("%c", screen[row][column]);
 		}
 		printf("\n");
+	}
+	for (int row = 0; row < sky->height; row++) {
+		free(screen[row]);
+	}
+	free(screen);
+}
+
+void putMobileSymbolsOnScreen(Mobile *mobile, char **screen, int height, int width) {
+	for (int row = -SPRITE_SIZE / 2; row <= SPRITE_SIZE / 2; row++) {
+		for (int column = -SPRITE_SIZE / 2; column <= SPRITE_SIZE / 2; column++) {
+			int screenRow = (getMobileY(mobile) + row + height) % height;
+			int screenColumn = (getMobileX(mobile) + column + width) % width;
+			screen[screenRow][screenColumn] =
+				getMobileSprite(mobile)->symbols[row + SPRITE_SIZE / 2][column + SPRITE_SIZE / 2];
+		}
 	}
 }
 
@@ -34,5 +72,10 @@ int getSkyWidth(Sky *sky) {
 }
 
 void putMobileOnSky(Sky *sky, Mobile *mobile) {
-
+	for (int i = 0; i < MAX_MOBILES; i++) {
+		if (sky->mobiles[i] == NULL) {
+			sky->mobiles[i] = mobile;
+			return;
+		}
+	}
 }

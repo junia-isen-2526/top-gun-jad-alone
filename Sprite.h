@@ -4,13 +4,16 @@
 
 #ifndef JUNIA_ISEN3_TOPGUN__SPRITE_H_
 #define JUNIA_ISEN3_TOPGUN__SPRITE_H_
+
+#include <stdlib.h>
 #define SPRITE_SIZE 5
+
 typedef struct {
   char symbols[SPRITE_SIZE][SPRITE_SIZE];
 } Sprite;
 
-Sprite* createSprite(char symbols[SPRITE_SIZE][SPRITE_SIZE]);
+Sprite *createSprite(char symbols[SPRITE_SIZE][SPRITE_SIZE]);
 
-void destroySprite(Sprite* sprite);
+void destroySprite(Sprite *sprite);
 
 #endif //JUNIA_ISEN3_TOPGUN__SPRITE_H_

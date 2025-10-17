@@ -2,17 +2,18 @@
 // Created by JAD on 17/10/2025.
 //
 #include "Mobile.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 
 #ifndef JUNIA_ISEN3_TOPGUN__SKY_H_
 #define JUNIA_ISEN3_TOPGUN__SKY_H_
 #define EMPTY_SKY_TILE '.'
+#define MAX_MOBILES 10
 
 typedef struct {
   int height;
   int width;
+  Mobile *mobiles[10];
 } Sky;
 
 Sky *createSky(int height, int width);
